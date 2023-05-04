@@ -1,20 +1,39 @@
+import { useState } from "react";
 import { IEmployee } from "../../contractors/Employee";
 import "./EmployeeList.style.css"
+import EmployeeModal from "./EmployeeModal";
 
 type Props = {
-    list: IEmployee[]
+    list: IEmployee[];
+    onDeleteClickHnd: (data:IEmployee) => void;
+    onEdit: (data:IEmployee) => void;
 }
 
 const EmployeeList = (props: Props) => {
-    const { list } = props;
+    const { list, onDeleteClickHnd, onEdit } = props;
+    const [showModal, setShowModal] = useState(false);
+    const [dataToShow, setDataToShow] = useState(null as IEmployee | null);
+    
+    const viewEmployee = (data:IEmployee) => {
+        setShowModal(true);
+        setDataToShow(data);
+    }
+
+    const onCloseModal = () => {
+        setShowModal(false);
+    }
+
     return (
         <>
             <div>
+                <article>
+                    <h3 className="list-header">Employee List</h3>
+                </article>
                 <table>
                     <tr>
-                        <th>Company</th>
-                        <th>Contact</th>
-                        <th>Country</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Action</th>
                     </tr>
                     {list.map(employee => {
                         return (
@@ -22,17 +41,24 @@ const EmployeeList = (props: Props) => {
                                 <td>{`${employee.firstName} ${employee.lastName}`}</td>
                                 <td>{employee.email}</td>
                                 <td>
-                                    <button>View</button>
-                                    <button>Edit</button>
-                                    <button>Delete</button>
+                                    <button onClick={ () => viewEmployee(employee)}>View</button>
+                                    <button onClick={ () => onEdit(employee)}>Edit</button>
+                                    <button onClick={ () => onDeleteClickHnd(employee)}>Delete</button>
                                 </td>
                             </tr>
                         );
                     })}
                 </table>
+                {showModal &&  dataToShow !== null && 
+                    (<EmployeeModal onClose={onCloseModal} data={dataToShow}/>)
+                }
             </div>
         </>
     );
 }
 
 export default EmployeeList;
+
+function useSate(arg0: boolean) {
+    throw new Error("Function not implemented.");
+}
