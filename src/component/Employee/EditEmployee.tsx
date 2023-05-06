@@ -9,29 +9,22 @@ type Props = {
 
 const EditEmployee = (props: Props) => {
     const { data, onBackBtnClickHnd, onUpdateClickHnd } = props;
+    const [employee, setEmployee] = useState<IEmployee>(data);
 
-    const [firstName, setFirstName] = useState(data.firstName);
-    const [lastName, setLastName] = useState(data.lastName);
-    const [email, setEmail] = useState(data.email);
 
-    const onFirstNameChangedHnd = (e:any) => {
-        setFirstName(e.target.value);
-    }
-    const onLastNameChangedHnd = (e:any) => {
-        setLastName(e.target.value);
-    }
-
-    const onEmailChangedHnd = (e:any) => {
-        setEmail(e.target.value);
+    const onEmployeePropChangedHandler = (e:any) => {
+        setEmployee(data => {
+            return {...data, [e.target.name]: [e.target.value]}
+        });
     }
 
     const onSubmitBtnClickHnd = (e:any) => {
         e.preventDefault();
         const updatedData: IEmployee = {
             id: data.id,
-            firstName: firstName,
-            lastName: lastName,
-            email: email
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            email: employee.email
         };
         onUpdateClickHnd(updatedData);
         onBackBtnClickHnd();
@@ -46,15 +39,15 @@ const EditEmployee = (props: Props) => {
                 <form onSubmit={onSubmitBtnClickHnd}>
                     <div>
                         <label>First Name: </label>
-                        <input type="text" value={firstName} onChange={onFirstNameChangedHnd}/>
+                        <input type="text" name="firstName" value={employee.firstName} onChange={onEmployeePropChangedHandler}/>
                     </div>
                     <div>
                         <label>Last Name: </label>
-                        <input type="text" value={lastName} onChange={onLastNameChangedHnd}/>
+                        <input type="text" name="lastName" value={employee.lastName} onChange={onEmployeePropChangedHandler}/>
                     </div>
                     <div>
                         <label>Email Add.: </label>
-                        <input type="text" value={email}  onChange={onEmailChangedHnd}/>
+                        <input type="text"name="email" value={employee.email} onChange={onEmployeePropChangedHandler}/>
                     </div>
                     <div>
                         <button onClick={onBackBtnClickHnd}>Back</button>
